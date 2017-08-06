@@ -7,6 +7,7 @@ case class BldGrouping(sharedPrefix: String,
 object Projects {
 
   private val bldGroupings = Seq(
+    BldGrouping(sharedPrefix = "brand-veenome"),
     BldGrouping(sharedPrefix = "camus-api"),
     BldGrouping(sharedPrefix = "camus-coders"),
     BldGrouping(sharedPrefix = "camus-etl-mapred-support"),
@@ -19,10 +20,23 @@ object Projects {
     BldGrouping(sharedPrefix = "grid-scrubplus-logformat-generated-hive_proto-EvfColumnsProto",
       gradleProjectName = Some("common-message")),
 
+    BldGrouping(sharedPrefix = "cc"),
+    BldGrouping(sharedPrefix = "common-releaseutils"),
+    BldGrouping(sharedPrefix = "common-repotools"),
+    BldGrouping(sharedPrefix = "common-tools-datacomp"),
     BldGrouping(sharedPrefix = "ei-common-Cache"),
     BldGrouping(sharedPrefix = "ei-common-LruCacheTest", gradleProjectName = Some("ei-common-Cache")),
     BldGrouping(sharedPrefix = "ei-common-RpcClient"),
     BldGrouping(sharedPrefix = "ei-common-RpcServer"),
+    BldGrouping(sharedPrefix = "ei-datamon-alert"),
+
+    BldGrouping(sharedPrefix = "grid-common-hive-bucketing"),
+    // BldGrouping(sharedPrefix = "grid-common-hive-utils"),
+    BldGrouping(sharedPrefix = "grid-common-hive"),
+
+    BldGrouping(sharedPrefix = "grid-onlinestore-storage-hbase"),
+    BldGrouping(sharedPrefix = "grid-onlinestore-utils-cleanup"),
+    BldGrouping(sharedPrefix = "grid-onlinestore-utils-norm"),
 
     // create one project for server.util, the only external dependency is server.geoip.TimeZone
     BldGrouping(sharedPrefix = "server-util"),
@@ -49,10 +63,12 @@ object Projects {
   }
 
   private def stripSuffices(s: String) : String = {
-    val short = s.stripSuffix("Test")
+    val short = s.stripSuffix("EvaluatorTest")
+      .stripSuffix("Test")
       .stripSuffix("Tests")
       .stripSuffix("Pkg")
       .stripSuffix("NoDeps")
+      .stripSuffix("NoConf")
       // .stripSuffix("Lib")
       .stripSuffix("_bin")
       .stripSuffix("_test")
