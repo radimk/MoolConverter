@@ -15,9 +15,12 @@ class SmallProjectFilter(modulePaths: Map[Int, String]) {
     """3rd_party-java-com-google-protobuf-ZeroCopyByteString
       |3rd_party-java-com-googlecode-protobuf-pro-duplex-DuplexLogProto
       |3rd_party-java-com-googlecode-protobuf-pro-duplex-DuplexProtobufAll
+      |3rd_party-java-com-twitter-elephantbird-hive-serde-Inspector
       |3rd_party-java-mvn-com-google-guava-GuavaTestLibAll
       |3rd_party-java-mvn-org-apache-curator-CuratorAll
       |3rd_party-java-mvn-org-apache-curator-CuratorTestAll
+      |3rd_party-java-mvn-org-apache-hadoop-HadoopDfsMiniClusterAll2
+      |3rd_party-java-mvn-org-apache-hadoop-HadoopRunTimeDeps2
       |3rd_party-java-mvn-org-codehaus-jackson-JacksonAll
       |3rd_party-java-mvn-redis-clients-JedisAll
       |common-rpcutils-DuplexProtocolJavaProto
@@ -28,12 +31,19 @@ class SmallProjectFilter(modulePaths: Map[Int, String]) {
       |ei-common-Cache
       |ei-common-RpcClient
       |ei-common-RpcServer
+      |grid-common-hive-DeviceCategoryUDF
       |grid-common-metrics-collectors-MetricsCollector
       |grid-common-metrics-reporters-AllReporters
       |grid-common-spark-SparkCommon
       |grid-common-testutils-TestLog4jAppendConsole
       |grid-common-utils-FileSystemUtil
       |grid-dmp-ssvadapter-utils-HdfsUtilsLib
+      |grid-lookup-dim-DimLibCommon
+      |grid-lookup-dim-DimLibOld
+      |grid-lookup-dim-config-ConfigLib
+      |grid-lookup-dim-ds-DSLib
+      |grid-lookup-metrics-MetricsLib
+      |grid-lookup-service-DimConstants
       |grid-luke-service-api-ServiceApi
       |grid-luke-service-api-TestUtil
       |grid-luke-service-api-chaining-ChainedTables
@@ -48,6 +58,7 @@ class SmallProjectFilter(modulePaths: Map[Int, String]) {
       |grid-luke-service-core-LoggingConnectionEventListener
       |grid-luke-service-core-LukeServer
       |grid-luke-service-core-MiniCluster
+      |grid-luke-service-core-common-simple
       |grid-luke-service-core-common-ByteSerDe
       |grid-luke-service-core-common-ControlValue
       |grid-luke-service-core-common-prod_conf-ServiceConfig
@@ -97,8 +108,17 @@ class SmallProjectFilter(modulePaths: Map[Int, String]) {
       path.startsWith("server-geoip") ||
       path.startsWith("camus") ||
       path.startsWith("common-message") ||
+      (path.startsWith("grid-common") && !path.startsWith("grid-common-GridCommon")) ||
+      path.startsWith("grid-common-hive") ||
+      path.startsWith("grid-common-utils") ||
+      path.startsWith("grid-lookup-support") ||
+      path.startsWith("grid-luke-service-core-common") ||
+      path.startsWith("grid-luke-utils") ||
       path.startsWith("grid-quasar") ||
       path.startsWith("grid-common-spark-Spark") ||
+      path.startsWith("modeling-behavioral") ||
+      path.startsWith("modeling-common") ||
+      path.startsWith("modeling-dependency") ||
 
       path == "grid-scrubplus-logformat-generated-hive_proto-EvfColumnsProto" ||
       path == "3rd_party-java-mvn-org-apache-hadoop-HadoopAll2" ||

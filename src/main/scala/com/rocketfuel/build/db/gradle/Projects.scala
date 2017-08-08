@@ -33,6 +33,8 @@ object Projects {
     BldGrouping(sharedPrefix = "grid-common-hive-bucketing"),
     // BldGrouping(sharedPrefix = "grid-common-hive-utils"),
     BldGrouping(sharedPrefix = "grid-common-hive"),
+    BldGrouping(sharedPrefix = "grid-lookup-support"),
+
     BldGrouping(sharedPrefix = "grid-luke-service-core-common-ByteSerDe", gradleProjectName = Some("grid-luke-service-core-common-simple")),
     BldGrouping(sharedPrefix = "grid-luke-service-core-common-ControlValue", gradleProjectName = Some("grid-luke-service-core-common-simple")),
     BldGrouping(sharedPrefix = "grid-luke-service-core-common-SizeCalculator", gradleProjectName = Some("grid-luke-service-core-common-simple")),
@@ -44,6 +46,13 @@ object Projects {
     BldGrouping(sharedPrefix = "grid-onlinestore-storage-hbase"),
     BldGrouping(sharedPrefix = "grid-onlinestore-utils-cleanup"),
     BldGrouping(sharedPrefix = "grid-onlinestore-utils-norm"),
+
+    BldGrouping(sharedPrefix = "modeling-common-Dependency", gradleProjectName = Some("modeling-dependency")),
+    BldGrouping(sharedPrefix = "modeling-common-Scala"),
+    BldGrouping(sharedPrefix = "modeling-common-ModelingCommon"),
+    BldGrouping(sharedPrefix = "modeling-common"),
+    BldGrouping(sharedPrefix = "modeling-behavioral", gradleProjectName = Some("modeling-common")),
+    BldGrouping(sharedPrefix = "modeling-dependency"),
 
     // create one project for server.util, the only external dependency is server.geoip.TimeZone
     BldGrouping(sharedPrefix = "server-util"),
