@@ -33,6 +33,13 @@ object Projects {
     BldGrouping(sharedPrefix = "grid-common-hive-bucketing"),
     // BldGrouping(sharedPrefix = "grid-common-hive-utils"),
     BldGrouping(sharedPrefix = "grid-common-hive"),
+    BldGrouping(sharedPrefix = "grid-luke-service-core-common-ByteSerDe", gradleProjectName = Some("grid-luke-service-core-common-simple")),
+    BldGrouping(sharedPrefix = "grid-luke-service-core-common-ControlValue", gradleProjectName = Some("grid-luke-service-core-common-simple")),
+    BldGrouping(sharedPrefix = "grid-luke-service-core-common-SizeCalculator", gradleProjectName = Some("grid-luke-service-core-common-simple")),
+    BldGrouping(sharedPrefix = "grid-luke-service-core-common-Stringifier", gradleProjectName = Some("grid-luke-service-core-common-simple")),
+    BldGrouping(sharedPrefix = "grid-luke-service-core-common"),
+    BldGrouping(sharedPrefix = "grid-luke-service-discovery", gradleProjectName = Some("grid-luke-service-core-common")),
+    BldGrouping(sharedPrefix = "grid-luke-utils", excludes = Set("grid-luke-utils-EmbeddedRedis")),
 
     BldGrouping(sharedPrefix = "grid-onlinestore-storage-hbase"),
     BldGrouping(sharedPrefix = "grid-onlinestore-utils-cleanup"),
