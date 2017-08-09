@@ -8,9 +8,7 @@ import com.rocketfuel.build.db.mvn.{Dependency => MvnDependency}
 import com.rocketfuel.build.db.mvn._
 import com.rocketfuel.sdbc.PostgreSql._
 
-case class BuildGradleParts(compileOnlyDeps: Set[String] = Set.empty,
-                            compileDeps: Set[String] = Set.empty,
-                            compileTestDeps: Set[String] = Set.empty,
+case class BuildGradleParts(compileDeps: Set[GrDependency] = Set.empty,
                             plugins: Set[String] = Set("plugin: 'java'"),
                             snippets: Set[String] = Set.empty)
 
@@ -72,12 +70,12 @@ class GradleConvert(projectRoot: Path, modulePaths: Map[Int, String], moduleOutp
   def shadowJarConfig(mainClass: Option[String]): Option[String] =
     mainClass.map(mClz => shadowJarSnippet.replace("__MAIN_CLASS__", mClz))
 
-  private val scala210Libs = List("  compile 'org.scala-lang:scala-library:2.10.4'",
-    "  compile 'org.scala-lang:scala-actors:2.10.4'"
+  private val scala210Libs = List(GrDependency(dep = "'org.scala-lang:scala-library:2.10.4'"),
+    GrDependency(dep = "'org.scala-lang:scala-actors:2.10.4'")
   )
-  private val scala211Libs = List("  compile 'org.scala-lang:scala-library:2.11.8'")
+  private val scala211Libs = List(GrDependency(dep = "'org.scala-lang:scala-library:2.11.8'"))
   // use 1.4.2 with scalatest 3, now stick to 1.1
-  private val scalatestLibs = "  testRuntime 'org.pegdown:pegdown:1.1.0'"
+  private val scalatestLibs = GrDependency(configuration = "testRuntime", dep = "'org.pegdown:pegdown:1.1.0'")
   private val scalatestSnippet =
     """
       |test {
@@ -88,14 +86,14 @@ class GradleConvert(projectRoot: Path, modulePaths: Map[Int, String], moduleOutp
   private val scala210Tasks = "rootProject.tasks.build210.dependsOn tasks.build\n"
   private val scala211Tasks = "rootProject.tasks.build211.dependsOn tasks.build\n"
 
-  private val protoLib = "  compile files(\"${System.env.HOME}/.mooltool/packages/protobuf/java/target/protobuf-2.5.0.jar\")"
-  private val thriftLib = "  compile 'org.apache.thrift:libthrift:0.9.1'"
+  private val protoLib = GrDependency(dep = "files(\"${System.env.HOME}/.mooltool/packages/protobuf/java/target/protobuf-2.5.0.jar\")")
+  private val thriftLib = GrDependency(dep = "'org.apache.thrift:libthrift:0.9.1'")
 
   def sourceCompatibility(javaVersion: Option[String]): String =
     "sourceCompatibility = " + javaVersion.getOrElse("1.7")
 
   private def gradleForBld(path: String, prjBld: Bld, dependencies: Vector[MvnDependency], moduleRoot: Path) = {
-    def dependencyList(isTest: Boolean) = dependencies.foldLeft(List[String]()) { case (depList, dep) =>
+    def dependencyList(isTest: Boolean) = dependencies.foldLeft(List[GrDependency]()) { case (depList, dep) =>
       moduleOutputs.get(dep.gradleDefinition).flatMap(modulePaths.get(_)) match {
         case Some(depPath) =>
           val configuration = dep.scope match {
@@ -110,18 +108,19 @@ class GradleConvert(projectRoot: Path, modulePaths: Map[Int, String], moduleOutp
             case _ => List(
               s"project(':${depPath}')")
           }
-          depList ++ projectOutputs.map(output => s"  ${configuration} ${output}")
+          depList ++ projectOutputs.map(output => GrDependency(configuration = configuration, dep = s"${output}"))
         case _ =>
-          depList ++ List(dep.gradleDependency).map { d =>
-            if (isTest) d.replace(" compile ", " testCompile ")
-            else d
+          depList ++ List(GrDependency(dep)).map { d =>
+            val newConfiguration = if (isTest && d.configuration == "compile") "testCompile"
+            else d.configuration
+            GrDependency(configuration = newConfiguration, dep = d.dep)
           }
       }
     }.filterNot { testDep =>
-      if (testDep.contains("':" + path + "'")) {
+      if (testDep.dep.contains("':" + path + "'")) {
         logger.info(s"eliminate test dependency on main source in ${path}")
       }
-      testDep.contains("':" + path + "'")
+      testDep.dep.contains("':" + path + "'")
     }.toSet
 
     val buildGradleParts = {
@@ -208,7 +207,7 @@ class GradleConvert(projectRoot: Path, modulePaths: Map[Int, String], moduleOutp
           |
           |dependencies {
           |""".stripMargin +
-        buildGradleParts.compileDeps.toSeq.sorted.mkString("\n") +
+        buildGradleParts.compileDeps.map(_.text).toSeq.sorted.mkString("\n") +
         "\n}\n"
     buildGradleText
   }
