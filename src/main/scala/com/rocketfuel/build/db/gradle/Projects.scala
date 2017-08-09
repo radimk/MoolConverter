@@ -48,6 +48,9 @@ object Projects {
     BldGrouping(sharedPrefix = "grid-onlinestore-utils-norm"),
 
     BldGrouping(sharedPrefix = "modeling-common-Dependency", gradleProjectName = Some("modeling-dependency")),
+    // these are Java tests built & run against Scala 2.10 and 2.11,
+    // can be merged into modeling-common-Scala but then only one of Java and Scala tests are run
+    BldGrouping(sharedPrefix = "modeling-common-JavaTest", gradleProjectName = Some("modeling-common-JavaTest")),
     BldGrouping(sharedPrefix = "modeling-common-Scala"),
     BldGrouping(sharedPrefix = "modeling-common-ModelingCommon"),
     BldGrouping(sharedPrefix = "modeling-common"),

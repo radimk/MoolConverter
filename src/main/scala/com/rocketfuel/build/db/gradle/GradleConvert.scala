@@ -10,7 +10,8 @@ import com.rocketfuel.sdbc.PostgreSql._
 
 case class BuildGradleParts(compileDeps: Set[GrDependency] = Set.empty,
                             plugins: Set[String] = Set("plugin: 'java'"),
-                            snippets: Set[String] = Set.empty)
+                            snippets: Set[String] = Set.empty,
+                            scalaVersions: Set[String] = Set.empty)
 
 class GradleConvert(projectRoot: Path, modulePaths: Map[Int, String], moduleOutputs: Map[String, Int]) extends Logger {
   // not s""": leave interpolation to Groovy/Gradle
@@ -157,7 +158,8 @@ class GradleConvert(projectRoot: Path, modulePaths: Map[Int, String], moduleOutp
           }
           BuildGradleParts(compileDeps = compileDeps,
             plugins = Set("plugin: 'scala'"),
-            snippets = Set(sourceCompatibility(prjBld.javaVersion)))
+            snippets = Set(sourceCompatibility(prjBld.javaVersion)),
+            scalaVersions = prjBld.scalaVersion.toSet)
         case "scala_test" =>
           val compileDeps = prjBld.scalaVersion match {
             case Some("2.10") => scala210Libs.toSet ++ dependencyList(true) + scalatestLibs
@@ -169,7 +171,8 @@ class GradleConvert(projectRoot: Path, modulePaths: Map[Int, String], moduleOutp
           }
           BuildGradleParts(compileDeps = compileDeps,
             plugins = Set("plugin: 'scala'", "plugin: 'com.github.maiflai.scalatest'"),
-            snippets = Set(sourceCompatibility(prjBld.javaVersion), scalatestSnippet))
+            snippets = Set(sourceCompatibility(prjBld.javaVersion), scalatestSnippet),
+            scalaVersions = prjBld.scalaVersion.toSet)
         case "scala_bin" =>
           val compileDeps = prjBld.scalaVersion match {
             case Some("2.10") => scala210Libs.toSet ++ dependencyList(false)
@@ -181,7 +184,8 @@ class GradleConvert(projectRoot: Path, modulePaths: Map[Int, String], moduleOutp
           }
           BuildGradleParts(compileDeps = compileDeps,
             plugins = Set("plugin: 'scala'", "plugin: 'com.github.johnrengelman.shadow'"),
-            snippets = shadowJarConfig(prjBld.mainClass).toSet + sourceCompatibility(prjBld.javaVersion))
+            snippets = shadowJarConfig(prjBld.mainClass).toSet + sourceCompatibility(prjBld.javaVersion),
+            scalaVersions = prjBld.scalaVersion.toSet)
         case _ =>
           BuildGradleParts(plugins = Set("plugin: 'base'"))
       }
@@ -193,11 +197,26 @@ class GradleConvert(projectRoot: Path, modulePaths: Map[Int, String], moduleOutp
              moduleRoot: Path) = {
     val buildGradleParts = bldWithDeps.map { case (bld, deps) => gradleForBld(path, bld, deps, moduleRoot) }
       .reduceLeft { (buildParts1, buildParts2) =>
-      BuildGradleParts(
-        compileDeps = buildParts1.compileDeps ++ buildParts2.compileDeps,
-        snippets = buildParts1.snippets ++ buildParts2.snippets,
-        plugins = buildParts1.plugins ++ buildParts2.plugins
-      )
+        val mergedDeps = buildParts1.compileDeps ++ buildParts2.compileDeps
+        val mergedScalaVersions = buildParts1.scalaVersions ++ buildParts2.scalaVersions ++
+        mergedDeps.map { d =>
+          if (d.dep.contains("org.scala-lang:scala-library:2.10")) Some("2.10")
+          else if (d.dep.contains("org.scala-lang:scala-library:2.11")) Some("2.11")
+          else None
+        }.flatten
+        val mergedDeps2 = mergedDeps.map { d =>
+          if (mergedScalaVersions.size > 1) d.toScalaMultiVersion
+          else d
+        }
+        val multiVersionPlugin =
+          if (mergedScalaVersions.size > 1) Some("plugin: 'com.adtran.scala-multiversion-plugin'")
+          else None
+        BuildGradleParts(
+          compileDeps = mergedDeps2,
+          snippets = buildParts1.snippets ++ buildParts2.snippets,
+          plugins = buildParts1.plugins ++ buildParts2.plugins ++ multiVersionPlugin,
+          scalaVersions = mergedScalaVersions
+        )
     }
 
     val buildGradleText =
