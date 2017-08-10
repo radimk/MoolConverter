@@ -43,20 +43,13 @@ case class Dependency(
   }
 
   lazy val gradleDefinition: String = {
-    s"${groupId}:${artifactId}:${version}"
-  }
-
-  lazy val gradleDependency: String = {
-    val configuration = scope match {
-      case "provided" => "compileOnly"
-      case "test" => "testCompile"
-      case _ => "compile"
-    }
     val classifier = `type` match {
       case Some("test-jar") => ":tests"
       case _ => ""
     }
-    s"  ${configuration} '${gradleDefinition}${classifier}'"
+    // TODO will break on grid.etl dep with classifier
+    if (artifactId == "grid.etl") s"(group: '${groupId}', name: '${artifactId}', version: '${version}'${classifier}, transitive: false)"
+    else s"'${groupId}:${artifactId}:${version}${classifier}'"
   }
 }
 

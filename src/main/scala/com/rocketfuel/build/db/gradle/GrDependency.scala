@@ -24,11 +24,7 @@ object GrDependency {
       case "test" => "testCompile"
       case _ => "compile"
     }
-    val classifier = dependency.`type` match {
-      case Some("test-jar") => ":tests"
-      case _ => ""
-    }
     new GrDependency(configuration = configuration,
-      dep = s"'${dependency.gradleDefinition}${classifier}'")
+      dep = s"${dependency.gradleDefinition}")
   }
 }

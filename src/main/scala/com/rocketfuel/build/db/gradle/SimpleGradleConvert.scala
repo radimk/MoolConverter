@@ -45,6 +45,7 @@ class SmallProjectFilter(modulePaths: Map[Int, String]) {
       |grid-common-testutils-TestLog4jAppendConsole
       |grid-common-utils-FileSystemUtil
       |grid-dmp-ssvadapter-utils-HdfsUtilsLib
+      |grid-lookup-dim-DimLib
       |grid-lookup-dim-DimLibCommon
       |grid-lookup-dim-DimLibOld
       |grid-lookup-dim-config-ConfigLib
@@ -124,6 +125,7 @@ class SmallProjectFilter(modulePaths: Map[Int, String]) {
       path.startsWith("grid-luke-service-core-common") ||
       path.startsWith("grid-luke-utils") ||
       path.startsWith("grid-quasar") ||
+      path.startsWith("grid-scrubplus") ||
       path.startsWith("grid-common-spark-Spark") ||
       path.startsWith("modeling-behavioral") ||
       path.startsWith("modeling-common") ||
@@ -168,7 +170,7 @@ object SimpleGradleConvert extends Logger {
     var includedBuilds = List[(String, Seq[String])]()
     val moduleOutputs = localBlds.foldLeft(Map.empty[String, Int]) { case (moduleOuts, bld) =>
       val identifier = identifiers(bld.id)
-      val output = s"${identifier.groupId}:${identifier.artifactId}:${identifier.version}"
+      val output = s"'${identifier.groupId}:${identifier.artifactId}:${identifier.version}'"
       moduleOuts + (output -> bld.id)
     }
     val prjFilter = new SmallProjectFilter(modulePaths)

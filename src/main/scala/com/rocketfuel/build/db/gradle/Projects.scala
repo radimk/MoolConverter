@@ -49,6 +49,11 @@ object Projects {
     BldGrouping(sharedPrefix = "grid-onlinestore-utils-cleanup"),
     BldGrouping(sharedPrefix = "grid-onlinestore-utils-norm"),
 
+    BldGrouping(sharedPrefix = "grid-quasar"),
+    BldGrouping(sharedPrefix = "grid-scrubplus-logformat-generated-pojo-GeneratedPojoLib"),
+    BldGrouping(sharedPrefix = "grid-scrubplus-logformat-generated-proto_pojo-GeneratedProtoPojoLib"),
+    BldGrouping(sharedPrefix = "grid-scrubplus"),
+
     BldGrouping(sharedPrefix = "modeling-common-Dependency", gradleProjectName = Some("modeling-dependency")),
     // these are Java tests built & run against Scala 2.10 and 2.11,
     // can be merged into modeling-common-Scala but then only one of Java and Scala tests are run
@@ -63,8 +68,7 @@ object Projects {
     BldGrouping(sharedPrefix = "server-util"),
     BldGrouping(sharedPrefix = "server-geoip-TimeZone", gradleProjectName = Some("server-util")),
 
-    BldGrouping(sharedPrefix = "server-geoip"),
-    BldGrouping(sharedPrefix = "grid-quasar")
+    BldGrouping(sharedPrefix = "server-geoip")
   )
 
   def pathToModulePath(path: Seq[String]): String = {
