@@ -124,7 +124,9 @@ class SmallProjectFilter(modulePaths: Map[Int, String]) {
       path.startsWith("grid-lookup-support") ||
       path.startsWith("grid-luke-service-core-common") ||
       path.startsWith("grid-luke-utils") ||
+      path.startsWith("grid-onlinestore") ||
       path.startsWith("grid-quasar") ||
+      path.startsWith("grid-reportplus") ||
       path.startsWith("grid-scrubplus") ||
       path.startsWith("grid-common-spark-Spark") ||
       path.startsWith("modeling-behavioral") ||
@@ -171,7 +173,8 @@ object SimpleGradleConvert extends Logger {
     val moduleOutputs = localBlds.foldLeft(Map.empty[String, Int]) { case (moduleOuts, bld) =>
       val identifier = identifiers(bld.id)
       val output = s"'${identifier.groupId}:${identifier.artifactId}:${identifier.version}'"
-      moduleOuts + (output -> bld.id)
+      val outputTest = s"'${identifier.groupId}:${identifier.artifactId}:${identifier.version}:tests'"
+      moduleOuts + (output -> bld.id) + (outputTest -> bld.id)
     }
     val prjFilter = new SmallProjectFilter(modulePaths)
     val convertor = new GradleConvert(projectsRoot, modulePaths, moduleOutputs)

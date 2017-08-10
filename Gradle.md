@@ -1,6 +1,5 @@
 ### current problems
 
-* projects/grid/reportplus/common/ScalaBase/build.gradle has no scala plugin
 * /tmp/gradle-conversion/projects/grid/reporting/revenue_capping/driver_lib/src/main/scala/com/rocketfuel/grid/reporting/revenue_capping/LukeSafeIterator.scala:8: value close is not a member of com.rocketfuel.grid.luke.service.client.LookupClient
     if (!it.hasNext) lookupClient.close()
 
@@ -11,12 +10,15 @@
 
     Generally it works but there are probably many strange cases that deserve special treatment.
 
-  * properly use `compileOnly` (akin to Maven's provided scope) / compile / testCompile
+  * properly use `compileOnly` (akin to Maven's provided scope) / compile / testCompile.
+  * Some dependencies are now in `compile` and `compileOnly`
   * ~~check test execution~~
 
     Test are executed. Many of them are failing due broken resource loading (lookup).
     That is something what can be fixed relatively easily.
-  * Java 7/8
+  * Java 7/8 - sometimes both sources are merged together
+  * test snippets for different groups should be merged. or better sorted into different tasks.
+  * transitive dependencies are dragging wrong artifacts like `org.json:json`
 
 * packaging / deployment
   * build fat JAR with proper content
@@ -26,7 +28,7 @@
 * Scala
   * build scala code - 80% due some problems with modeling
   * enable 2.10/2.11 switching
-    This is tricky.
+    Shared library that is built as multi-version pushes all downstream deps to multi-version unless we disable it at build time.
     Some simple cases look OK but modeling is full of strange patterns.
     One possibility is to conditionally include subprojects but it makes it harder to switch between 2.10 and 2.11.
   * scalatests

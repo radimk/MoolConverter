@@ -45,11 +45,20 @@ object Projects {
     BldGrouping(sharedPrefix = "grid-luke-service-discovery", gradleProjectName = Some("grid-luke-service-core-common")),
     BldGrouping(sharedPrefix = "grid-luke-utils", excludes = Set("grid-luke-utils-EmbeddedRedis")),
 
-    BldGrouping(sharedPrefix = "grid-onlinestore-storage-hbase"),
     BldGrouping(sharedPrefix = "grid-onlinestore-utils-cleanup"),
     BldGrouping(sharedPrefix = "grid-onlinestore-utils-norm"),
+    BldGrouping(sharedPrefix = "grid-onlinestore-model-dmp"),
+    BldGrouping(sharedPrefix = "grid-onlinestore-model-protobuf-TestProtobuf", gradleProjectName = Some("grid-onlinestore-model-dmp")),
+    BldGrouping(sharedPrefix = "grid-onlinestore", excludes = Set(
+      "grid-onlinestore-OnlineStore",
+      "grid-onlinestore-OnlineJobs",
+      "grid-onlinestore-OfflineJobs"
+    )),
+    BldGrouping(sharedPrefix = "grid-onlinestore", gradleProjectName = Some("grid-onlinestore-all")),
 
     BldGrouping(sharedPrefix = "grid-quasar"),
+    BldGrouping(sharedPrefix = "grid-reportplus-writers"),
+    BldGrouping(sharedPrefix = "grid-reportplus"),
     BldGrouping(sharedPrefix = "grid-scrubplus-logformat-generated-pojo-GeneratedPojoLib"),
     BldGrouping(sharedPrefix = "grid-scrubplus-logformat-generated-proto_pojo-GeneratedProtoPojoLib"),
     BldGrouping(sharedPrefix = "grid-scrubplus"),

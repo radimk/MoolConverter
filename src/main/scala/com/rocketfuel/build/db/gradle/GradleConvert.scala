@@ -93,7 +93,7 @@ class GradleConvert(projectRoot: Path, modulePaths: Map[Int, String], moduleOutp
   def sourceCompatibility(javaVersion: Option[String]): String =
     "sourceCompatibility = " + javaVersion.getOrElse("1.7")
 
-  private def gradleForBld(path: String, prjBld: Bld, dependencies: Vector[MvnDependency], moduleRoot: Path) = {
+  private def gradleForBld(path: String, prjBld: Bld, dependencies: Vector[MvnDependency], moduleRoot: Path): BuildGradleParts = {
     def dependencyList(isTest: Boolean) = dependencies.foldLeft(List[GrDependency]()) { case (depList, dep) =>
       moduleOutputs.get(dep.gradleDefinition).flatMap(modulePaths.get(_)) match {
         case Some(depPath) =>
@@ -118,8 +118,11 @@ class GradleConvert(projectRoot: Path, modulePaths: Map[Int, String], moduleOutp
           }
       }
     }.filterNot { testDep =>
+      if (path == "grid-onlinestore" && testDep.dep.contains("grid-onlinestore-model-dmp")) {
+        logger.info(s"unwanted dependency ${prjBld}, ${testDep}")
+      }
       if (testDep.dep.contains("':" + path + "'")) {
-        logger.info(s"eliminate test dependency on main source in ${path}")
+        logger.trace(s"eliminate test dependency on main source in ${path}")
       }
       testDep.dep.contains("':" + path + "'")
     }.toSet
@@ -199,11 +202,13 @@ class GradleConvert(projectRoot: Path, modulePaths: Map[Int, String], moduleOutp
       .reduceLeft { (buildParts1, buildParts2) =>
         val mergedDeps = buildParts1.compileDeps ++ buildParts2.compileDeps
         val mergedScalaVersions = buildParts1.scalaVersions ++ buildParts2.scalaVersions ++
-        mergedDeps.map { d =>
-          if (d.dep.contains("org.scala-lang:scala-library:2.10")) Some("2.10")
-          else if (d.dep.contains("org.scala-lang:scala-library:2.11")) Some("2.11")
-          else None
-        }.flatten
+          mergedDeps.map { d =>
+            if (d.dep.contains("org.scala-lang:scala-library:2.10")) Some("2.10")
+            else if (d.dep.contains("org.scala-lang:scala-library:2.11")) Some("2.11")
+            else None
+          }.flatten ++
+          // TODO following is wrong
+          (if (path == "grid-reportplus-writers") Set("2.10", "2.11") else Set.empty)
         val mergedDeps2 = mergedDeps.map { d =>
           if (mergedScalaVersions.size > 1) d.toScalaMultiVersion
           else d
