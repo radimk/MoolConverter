@@ -28,11 +28,13 @@ object Projects {
     BldGrouping(sharedPrefix = "ei-common-LruCacheTest", gradleProjectName = Some("ei-common-Cache")),
     BldGrouping(sharedPrefix = "ei-common-RpcClient"),
     BldGrouping(sharedPrefix = "ei-common-RpcServer"),
+    BldGrouping(sharedPrefix = "ei-common-YamlUtil"), // to add ...WithDeps
     BldGrouping(sharedPrefix = "ei-datamon-alert"),
 
     BldGrouping(sharedPrefix = "grid-common-hive-bucketing"),
     // BldGrouping(sharedPrefix = "grid-common-hive-utils"),
     BldGrouping(sharedPrefix = "grid-common-hive"),
+    BldGrouping(sharedPrefix = "grid-externalreport"),
     BldGrouping(sharedPrefix = "grid-lookup-support"),
 
     BldGrouping(sharedPrefix = "grid-luke-service-core-common-ByteSerDe", gradleProjectName = Some("grid-luke-service-core-common-simple")),

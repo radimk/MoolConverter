@@ -28,9 +28,16 @@ class SmallProjectFilter(modulePaths: Map[Int, String]) {
       |common-rpcutils-RpcTestJavaProto
       |dp-luke-LookupJavaProtos
       |dp-luke-PageJavaProtos
+      |ei-common-ClassUtil
+      |ei-common-ClassUtilTest
       |ei-common-Cache
+      |ei-common-DummyRecord
       |ei-common-RpcClient
       |ei-common-RpcServer
+      |ei-common-YamlUtil
+      |ei-common-YamlUtilTest
+      |ei-common-YamlUtilWithDeps
+      |ei-common-resources-TestResources
       |grid-common-hive-DeviceCategoryUDF
       |grid-common-metrics-collectors-MetricsCollector
       |grid-common-metrics-reporters-AllReporters
@@ -44,6 +51,7 @@ class SmallProjectFilter(modulePaths: Map[Int, String]) {
       |grid-lookup-dim-ds-DSLib
       |grid-lookup-metrics-MetricsLib
       |grid-lookup-service-DimConstants
+      |grid-luke-objects-generated-LukeObjects
       |grid-luke-service-api-ServiceApi
       |grid-luke-service-api-TestUtil
       |grid-luke-service-api-chaining-ChainedTables
@@ -111,6 +119,7 @@ class SmallProjectFilter(modulePaths: Map[Int, String]) {
       (path.startsWith("grid-common") && !path.startsWith("grid-common-GridCommon")) ||
       path.startsWith("grid-common-hive") ||
       path.startsWith("grid-common-utils") ||
+      path.startsWith("grid-externalreport") ||
       path.startsWith("grid-lookup-support") ||
       path.startsWith("grid-luke-service-core-common") ||
       path.startsWith("grid-luke-utils") ||
