@@ -45,6 +45,7 @@ object Projects {
     BldGrouping(sharedPrefix = "grid-luke-service-discovery", gradleProjectName = Some("grid-luke-service-core-common")),
     BldGrouping(sharedPrefix = "grid-luke-utils", excludes = Set("grid-luke-utils-EmbeddedRedis")),
 
+    BldGrouping(sharedPrefix = "grid-mestor"),
     BldGrouping(sharedPrefix = "grid-onlinestore-utils-cleanup"),
     BldGrouping(sharedPrefix = "grid-onlinestore-utils-norm"),
     BldGrouping(sharedPrefix = "grid-onlinestore-model-dmp"),
@@ -77,7 +78,13 @@ object Projects {
     BldGrouping(sharedPrefix = "server-util"),
     BldGrouping(sharedPrefix = "server-geoip-TimeZone", gradleProjectName = Some("server-util")),
 
-    BldGrouping(sharedPrefix = "server-geoip")
+    BldGrouping(sharedPrefix = "server-geoip"),
+    BldGrouping(sharedPrefix = "server-rfi"),
+    // merge these python packages together
+    BldGrouping(sharedPrefix = "server-tools-load_anon_inventory"),
+    BldGrouping(sharedPrefix = "server-tools-load_bid_notification")
+
+    // BldGrouping(sharedPrefix = "server", gradleProjectName = Some("server-ServerProtoAll")) // too many duplicates in protobufs
   )
 
   def pathToModulePath(path: Seq[String]): String = {

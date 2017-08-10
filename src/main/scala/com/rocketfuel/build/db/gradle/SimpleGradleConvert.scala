@@ -96,25 +96,13 @@ class SmallProjectFilter(modulePaths: Map[Int, String]) {
       |grid-luke-squeeze-payload-PayloadTestLib
       |grid-luke-utils-Bytes
       |grid-luke-utils-DataSize
-      |grid-quasar-config-Config
-      |grid-quasar-config-ConfigTypes
-      |grid-quasar-io-IO
-      |grid-quasar-lookup-Lookup
-      |grid-quasar-metric-Metric
-      |grid-quasar-process-Process
-      |grid-quasar-resources-conf-report_cfg
-      |grid-quasar-schema-Schema
-      |grid-quasar-schema-SchemaPojos
-      |grid-scrubplus-logformat-generated-pojo-GeneratedPojoLib
-      |grid-scrubplus-logformat-generated-proto_pojo-GeneratedProtoPojoLib
       |3rd_party-java-mvn-org-json4s-Json4sAll2_11
       |grid-common-spark-SparkCatalyst2_0
       |grid-common-spark-SparkCore2_0
     """.stripMargin.split("\n").toSet
 
   def filterProject(path: String): Boolean = {
-    if (path.startsWith("server-util") ||
-      path.startsWith("server-geoip") ||
+    if (path.startsWith("server") ||
       path.startsWith("camus") ||
       path.startsWith("common-message") ||
       (path.startsWith("grid-common") && !path.startsWith("grid-common-GridCommon")) ||
@@ -124,6 +112,7 @@ class SmallProjectFilter(modulePaths: Map[Int, String]) {
       path.startsWith("grid-lookup-support") ||
       path.startsWith("grid-luke-service-core-common") ||
       path.startsWith("grid-luke-utils") ||
+      path.startsWith("grid-mestor") ||
       path.startsWith("grid-onlinestore") ||
       path.startsWith("grid-quasar") ||
       path.startsWith("grid-reportplus") ||
