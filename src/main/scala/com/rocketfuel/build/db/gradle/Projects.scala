@@ -31,9 +31,17 @@ object Projects {
     BldGrouping(sharedPrefix = "ei-common-YamlUtil"), // to add ...WithDeps
     BldGrouping(sharedPrefix = "ei-datamon-alert"),
 
+    BldGrouping(sharedPrefix = "grid-common-GridCommon"),
     BldGrouping(sharedPrefix = "grid-common-hive-bucketing"),
     // BldGrouping(sharedPrefix = "grid-common-hive-utils"),
     BldGrouping(sharedPrefix = "grid-common-hive"),
+    BldGrouping(sharedPrefix = "grid-common-io"),
+    BldGrouping(sharedPrefix = "grid-common-mapreduce-job-metrics-config-BulkloadJobConfig"),
+    BldGrouping(sharedPrefix = "grid-common-mapreduce-job-metrics-JobMetricUtils", gradleProjectName = Some("grid-common-mapreduce-job-metrics")),
+    BldGrouping(sharedPrefix = "grid-common-mapreduce-job-metrics-JobMetricsUtilsTest", gradleProjectName = Some("grid-common-mapreduce-job-metrics")),
+    BldGrouping(sharedPrefix = "grid-common-mapreduce-job-metrics"),
+    BldGrouping(sharedPrefix = "modeling-hiveaccess-OrcStructFieldRetriever", gradleProjectName = Some("grid-common-hive")),
+    BldGrouping(sharedPrefix = "modeling-utils-hive-HiveUtils", gradleProjectName = Some("grid-common-hive")),
     BldGrouping(sharedPrefix = "grid-externalreport"),
     BldGrouping(sharedPrefix = "grid-lookup-support"),
 
@@ -64,6 +72,10 @@ object Projects {
     BldGrouping(sharedPrefix = "grid-scrubplus-logformat-generated-proto_pojo-GeneratedProtoPojoLib"),
     BldGrouping(sharedPrefix = "grid-scrubplus"),
 
+    BldGrouping(sharedPrefix = "mobile-common"),
+    BldGrouping(sharedPrefix = "mobile-geo"),
+    BldGrouping(sharedPrefix = "mobile-pipelines"),// probably deserves split
+    BldGrouping(sharedPrefix = "mobile-tools"),
     BldGrouping(sharedPrefix = "modeling-common-Dependency", gradleProjectName = Some("modeling-dependency")),
     // these are Java tests built & run against Scala 2.10 and 2.11,
     // can be merged into modeling-common-Scala but then only one of Java and Scala tests are run
@@ -72,7 +84,9 @@ object Projects {
     BldGrouping(sharedPrefix = "modeling-common-ModelingCommon"),
     BldGrouping(sharedPrefix = "modeling-common"),
     BldGrouping(sharedPrefix = "modeling-behavioral", gradleProjectName = Some("modeling-common")),
+    BldGrouping(sharedPrefix = "modeling-bt"),
     BldGrouping(sharedPrefix = "modeling-dependency"),
+    BldGrouping(sharedPrefix = "modeling-utils"), // modeling-utils-hive is moved to grid-common-hive
 
     // create one project for server.util, the only external dependency is server.geoip.TimeZone
     BldGrouping(sharedPrefix = "server-util"),

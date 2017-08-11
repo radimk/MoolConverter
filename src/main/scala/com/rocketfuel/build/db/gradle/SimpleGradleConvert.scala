@@ -21,7 +21,9 @@ class SmallProjectFilter(modulePaths: Map[Int, String]) {
       |3rd_party-java-mvn-org-apache-curator-CuratorTestAll
       |3rd_party-java-mvn-org-apache-hadoop-HadoopDfsMiniClusterAll2
       |3rd_party-java-mvn-org-apache-hadoop-HadoopRunTimeDeps2
+      |3rd_party-java-mvn-org-apache-httpcomponents-HttpAll
       |3rd_party-java-mvn-org-codehaus-jackson-JacksonAll
+      |3rd_party-java-mvn-org-eclipse-jetty-JettyAll
       |3rd_party-java-mvn-redis-clients-JedisAll
       |common-rpcutils-DuplexProtocolJavaProto
       |common-rpcutils-EmptyJavaProto
@@ -38,13 +40,8 @@ class SmallProjectFilter(modulePaths: Map[Int, String]) {
       |ei-common-YamlUtilTest
       |ei-common-YamlUtilWithDeps
       |ei-common-resources-TestResources
-      |grid-common-hive-DeviceCategoryUDF
-      |grid-common-metrics-collectors-MetricsCollector
-      |grid-common-metrics-reporters-AllReporters
-      |grid-common-spark-SparkCommon
-      |grid-common-testutils-TestLog4jAppendConsole
-      |grid-common-utils-FileSystemUtil
       |grid-dmp-ssvadapter-utils-HdfsUtilsLib
+      |grid-lookup-GridLookup
       |grid-lookup-dim-DimLib
       |grid-lookup-dim-DimLibCommon
       |grid-lookup-dim-DimLibOld
@@ -105,10 +102,9 @@ class SmallProjectFilter(modulePaths: Map[Int, String]) {
     if (path.startsWith("server") ||
       path.startsWith("camus") ||
       path.startsWith("common-message") ||
-      (path.startsWith("grid-common") && !path.startsWith("grid-common-GridCommon")) ||
-      path.startsWith("grid-common-hive") ||
-      path.startsWith("grid-common-utils") ||
+      path.startsWith("grid-common") ||
       path.startsWith("grid-externalreport") ||
+      path.startsWith("grid-lookup-service") ||
       path.startsWith("grid-lookup-support") ||
       path.startsWith("grid-luke-service-core-common") ||
       path.startsWith("grid-luke-utils") ||
@@ -118,9 +114,13 @@ class SmallProjectFilter(modulePaths: Map[Int, String]) {
       path.startsWith("grid-reportplus") ||
       path.startsWith("grid-scrubplus") ||
       path.startsWith("grid-common-spark-Spark") ||
+      path.startsWith("mobile") ||
       path.startsWith("modeling-behavioral") ||
+      path.startsWith("modeling-bt") ||
       path.startsWith("modeling-common") ||
       path.startsWith("modeling-dependency") ||
+      path.startsWith("modeling-hiveaccess") ||
+      path.startsWith("modeling-utils") ||
 
       path == "grid-scrubplus-logformat-generated-hive_proto-EvfColumnsProto" ||
       path == "3rd_party-java-mvn-org-apache-hadoop-HadoopAll2" ||
