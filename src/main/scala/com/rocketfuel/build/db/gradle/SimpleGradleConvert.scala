@@ -16,6 +16,8 @@ class SmallProjectFilter(modulePaths: Map[Int, String]) {
       |3rd_party-java-com-googlecode-protobuf-pro-duplex-DuplexLogProto
       |3rd_party-java-com-googlecode-protobuf-pro-duplex-DuplexProtobufAll
       |3rd_party-java-com-twitter-elephantbird-hive-serde-Inspector
+      |3rd_party-java-mvn-ch-qos-logback-LogbackAll
+      |3rd_party-java-mvn-com-fasterxml-FasterxmlJacksonAll
       |3rd_party-java-mvn-com-google-guava-GuavaTestLibAll
       |3rd_party-java-mvn-org-apache-curator-CuratorAll
       |3rd_party-java-mvn-org-apache-curator-CuratorTestAll
@@ -24,6 +26,7 @@ class SmallProjectFilter(modulePaths: Map[Int, String]) {
       |3rd_party-java-mvn-org-apache-httpcomponents-HttpAll
       |3rd_party-java-mvn-org-codehaus-jackson-JacksonAll
       |3rd_party-java-mvn-org-eclipse-jetty-JettyAll
+      |3rd_party-java-mvn-org-json4s-Json4sAll
       |3rd_party-java-mvn-redis-clients-JedisAll
       |common-rpcutils-DuplexProtocolJavaProto
       |common-rpcutils-EmptyJavaProto
@@ -41,58 +44,6 @@ class SmallProjectFilter(modulePaths: Map[Int, String]) {
       |ei-common-YamlUtilWithDeps
       |ei-common-resources-TestResources
       |grid-dmp-ssvadapter-utils-HdfsUtilsLib
-      |grid-lookup-GridLookup
-      |grid-lookup-dim-DimLib
-      |grid-lookup-dim-DimLibCommon
-      |grid-lookup-dim-DimLibOld
-      |grid-lookup-dim-config-ConfigLib
-      |grid-lookup-dim-ds-DSLib
-      |grid-lookup-metrics-MetricsLib
-      |grid-lookup-service-DimConstants
-      |grid-luke-objects-generated-LukeObjects
-      |grid-luke-service-api-ServiceApi
-      |grid-luke-service-api-TestUtil
-      |grid-luke-service-api-chaining-ChainedTables
-      |grid-luke-service-client-ClientConf
-      |grid-luke-service-client-LookupClient
-      |grid-luke-service-client-LookupClientNoConf
-      |grid-luke-service-client-LookupRpcClient
-      |grid-luke-service-core-Client
-      |grid-luke-service-core-ClientTest
-      |grid-luke-service-core-L1Server
-      |grid-luke-service-core-L2Server
-      |grid-luke-service-core-LoggingConnectionEventListener
-      |grid-luke-service-core-LukeServer
-      |grid-luke-service-core-MiniCluster
-      |grid-luke-service-core-common-simple
-      |grid-luke-service-core-common-ByteSerDe
-      |grid-luke-service-core-common-ControlValue
-      |grid-luke-service-core-common-prod_conf-ServiceConfig
-      |grid-luke-service-core-common-PageClient
-      |grid-luke-service-core-common-PageStore
-      |grid-luke-service-core-common-RpcClientUtil
-      |grid-luke-service-core-common-ServiceConfig
-      |grid-luke-service-core-common-SizeCalculator
-      |grid-luke-service-core-common-Stringifier
-      |grid-luke-service-core-lookupservice-LookupService
-      |grid-luke-service-core-lookupservice-RemotePageStore
-      |grid-luke-service-core-pageservice-PageService
-      |grid-luke-service-core-pageservice-RedisPageStore
-      |grid-luke-service-discovery-ServiceDiscovery
-      |grid-luke-service-exception-LukeException
-      |grid-luke-service-metrics-Common
-      |grid-luke-service-metrics-LookupServiceMetrics
-      |grid-luke-service-metrics-LookupRpcClientMetrics
-      |grid-luke-service-metrics-RedisPageStoreMetrics
-      |grid-luke-squeeze-payload-block-BlockerApi
-      |grid-luke-squeeze-payload-block-PayloadBlockerLib
-      |grid-luke-squeeze-payload-pagified-PagifiedPayloadApi
-      |grid-luke-squeeze-payload-pagified-PagifiedPayloadLib
-      |grid-luke-squeeze-payload-PayloadApi
-      |grid-luke-squeeze-payload-PayloadLib
-      |grid-luke-squeeze-payload-PayloadTestLib
-      |grid-luke-utils-Bytes
-      |grid-luke-utils-DataSize
       |3rd_party-java-mvn-org-json4s-Json4sAll2_11
       |grid-common-spark-SparkCatalyst2_0
       |grid-common-spark-SparkCore2_0
@@ -104,15 +55,18 @@ class SmallProjectFilter(modulePaths: Map[Int, String]) {
       path.startsWith("common-message") ||
       path.startsWith("grid-common") ||
       path.startsWith("grid-externalreport") ||
-      path.startsWith("grid-lookup-service") ||
-      path.startsWith("grid-lookup-support") ||
-      path.startsWith("grid-luke-service-core-common") ||
-      path.startsWith("grid-luke-utils") ||
+      path.startsWith("grid-keychainsegjournal") ||
+      path.startsWith("grid-lookup") ||
+      path.startsWith("grid-luke") ||
       path.startsWith("grid-mestor") ||
+      path.startsWith("grid-metricsdb") ||
       path.startsWith("grid-onlinestore") ||
       path.startsWith("grid-quasar") ||
       path.startsWith("grid-reportplus") ||
+      path.startsWith("grid-retention") ||
+      path.startsWith("grid-site_mv") ||
       path.startsWith("grid-scrubplus") ||
+      path.startsWith("grid-viewability") ||
       path.startsWith("grid-common-spark-Spark") ||
       path.startsWith("mobile") ||
       path.startsWith("modeling-behavioral") ||
