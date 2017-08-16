@@ -78,7 +78,6 @@ class SmallProjectFilter(modulePaths: Map[Int, String]) {
 
       path == "grid-scrubplus-logformat-generated-hive_proto-EvfColumnsProto" ||
       path == "3rd_party-java-mvn-org-apache-hadoop-HadoopAll2" ||
-      path == "3rd_party-java-mvn-org-ostermiller-Utils" ||
       quasarDeps.contains(path))
       true
     else
@@ -105,6 +104,11 @@ object SimpleGradleConvert extends Logger {
 
     val dependencies =
       com.rocketfuel.build.db.mvn.Dependency.list.vector().groupBy(_.sourceId)
+    val publications = {
+      for (i <- Publications.all.iterator()) yield {
+        i.id -> i
+      }
+    }.toMap
 
     val localBlds = Bld.locals.vector()
     val modulePaths = localBlds.foldLeft(Map.empty[Int,String]) { case (m, bld) =>
@@ -120,7 +124,7 @@ object SimpleGradleConvert extends Logger {
       moduleOuts + (output -> bld.id) + (outputTest -> bld.id)
     }
     val prjFilter = new SmallProjectFilter(modulePaths)
-    val convertor = new GradleConvert(projectsRoot, modulePaths, moduleOutputs)
+    val convertor = new GradleConvert(projectsRoot, modulePaths, publications, moduleOutputs)
     // for ((path, blds) <- moduleBlds) {
     for ((path, blds) <- moduleBlds.filter { case (path, bld) => prjFilter.filterProject(path) }) {
       val bldsWithDeps = blds

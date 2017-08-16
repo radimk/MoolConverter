@@ -8,12 +8,16 @@ import com.rocketfuel.build.db.mvn.{Dependency => MvnDependency}
 import com.rocketfuel.build.db.mvn._
 import com.rocketfuel.sdbc.PostgreSql._
 
-case class BuildGradleParts(compileDeps: Set[GrDependency] = Set.empty,
+case class BuildGradleParts(group: String = "com.rocketfuel.vostok",
+                            name: Option[String] = None,
+                            compileDeps: Set[GrDependency] = Set.empty,
                             plugins: Set[String] = Set("plugin: 'java'"),
                             snippets: Set[String] = Set.empty,
                             scalaVersions: Set[String] = Set.empty)
 
-class GradleConvert(projectRoot: Path, modulePaths: Map[Int, String], moduleOutputs: Map[String, Int]) extends Logger {
+class GradleConvert(projectRoot: Path, modulePaths: Map[Int, String],
+                    publications: Map[Int, Publications],
+                    moduleOutputs: Map[String, Int]) extends Logger {
   // not s""": leave interpolation to Groovy/Gradle
   private val protoConfigSnippet =
     """
@@ -70,6 +74,38 @@ class GradleConvert(projectRoot: Path, modulePaths: Map[Int, String], moduleOutp
 
   def shadowJarConfig(mainClass: Option[String]): Option[String] =
     mainClass.map(mClz => shadowJarSnippet.replace("__MAIN_CLASS__", mClz))
+
+  private val publishSnippet =
+    """
+      |publishing {
+      |  repositories {
+      |    maven {
+      |      url "${rootProject.buildDir}/repo"
+      |    }
+      |  }
+      |
+      |  publications {
+      |    maven(MavenPublication) {
+      |      groupId '__GROUP__'
+      |      artifactId '__NAME__'
+      |      version '__VERSION__'
+      |
+      |      from components.java
+      |
+      |      // TODO need to order after sourcesJar task
+      |      // artifact sourcesJar {
+      |      //   classifier "sources"
+      |      // }
+      |    }
+      |  }
+      |}
+      |
+    """.stripMargin
+
+  def publishSnippet(publications: Publications): String =
+    publishSnippet.replace("__GROUP__", publications.groupId).
+      replace("__NAME__", publications.artifactId).
+      replace("__VERSION__", publications.baseVersion)
 
   private val scala210Libs = List(GrDependency(dep = "'org.scala-lang:scala-library:2.10.4'"),
     GrDependency(dep = "'org.scala-lang:scala-actors:2.10.4'")
@@ -193,7 +229,26 @@ class GradleConvert(projectRoot: Path, modulePaths: Map[Int, String], moduleOutp
           BuildGradleParts(plugins = Set("plugin: 'base'"))
       }
     }
-    buildGradleParts
+    publications.get(prjBld.id) match {
+      case Some(publish) =>
+        logger.trace(s"set ${prjBld} publish data to ${publish}")
+        if (buildGradleParts.name.isDefined && buildGradleParts.name != Some(publish.artifactId)) {
+          logger.info(s"${prjBld} has already publish data set")
+        }
+
+        if (buildGradleParts.plugins.contains("plugin: 'java'") || buildGradleParts.plugins.contains("plugin: 'scala'")) {
+          buildGradleParts.copy(group = publish.groupId, name = Some(publish.artifactId),
+            // plugins = buildGradleParts.plugins + "from: \"${rootProject.projectDir}/gradle/publish.gradle\"",
+            plugins = buildGradleParts.plugins + "plugin: 'maven-publish'",
+            snippets = buildGradleParts.snippets + publishSnippet(publish))
+        } else {
+          logger.info(s"ignore publish for ${prjBld} - ${buildGradleParts.plugins}")
+          buildGradleParts
+        }
+      case _ =>
+        buildGradleParts
+    }
+    // buildGradleParts
   }
 
   def gradle(path: String, bldWithDeps: Map[Bld, Vector[MvnDependency]],
@@ -224,8 +279,10 @@ class GradleConvert(projectRoot: Path, modulePaths: Map[Int, String], moduleOutp
         )
     }
 
+    val buildName = buildGradleParts.name.getOrElse(path)
     val buildGradleText =
       buildGradleParts.plugins.map(p => s"apply ${p}").mkString("\n") + "\n\n" +
+        s"group='${buildGradleParts.group}'\n" +
         buildGradleParts.snippets.mkString("\n") +
         """
           |
