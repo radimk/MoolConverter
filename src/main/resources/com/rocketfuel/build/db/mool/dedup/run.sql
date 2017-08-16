@@ -611,3 +611,20 @@ SELECT mool_dedup.add_dependency(
   false
 );
 
+/*
+{java,mvn,org,ostermiller,Utils}
+{java,mvn,org,ostermiller,UtilsOriginal}
+
+Remove Utils (filtered *.java and *.bte from original JAR).
+Replace dependencies on Utils with UtilsOriginal.
+*/
+
+INSERT INTO mool_dedup.bld_to_bld_additions (source_id, target_id, is_compile, is_extract)
+  SELECT bld_to_bld.source_id, (SELECT id FROM mool.blds WHERE path = array['java','mvn','org','ostermiller','UtilsOriginal']), bld_to_bld.is_compile, bld_to_bld.is_extract
+  FROM mool.bld_to_bld
+  WHERE bld_to_bld.target_id = (SELECT id FROM mool.blds WHERE path = array['java','mvn','org','ostermiller','Utils']);
+
+INSERT INTO mool_dedup.bld_to_bld_removals (bld_to_bld_id)
+  SELECT bld_to_bld.id
+  FROM mool.bld_to_bld
+  WHERE target_id = (SELECT id FROM mool.blds WHERE path = array['java','mvn','org','ostermiller','Utils']);
