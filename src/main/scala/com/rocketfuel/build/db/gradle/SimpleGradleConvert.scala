@@ -18,6 +18,7 @@ class SmallProjectFilter(modulePaths: Map[Int, String]) {
       |3rd_party-java-com-twitter-elephantbird-hive-serde-Inspector
       |3rd_party-java-mvn-ch-qos-logback-LogbackAll
       |3rd_party-java-mvn-com-fasterxml-FasterxmlJacksonAll
+      |3rd_party-java-mvn-com-fasterxml-FasterxmlJacksonAll2_11
       |3rd_party-java-mvn-com-google-guava-GuavaTestLibAll
       |3rd_party-java-mvn-org-apache-curator-CuratorAll
       |3rd_party-java-mvn-org-apache-curator-CuratorTestAll
@@ -27,6 +28,7 @@ class SmallProjectFilter(modulePaths: Map[Int, String]) {
       |3rd_party-java-mvn-org-codehaus-jackson-JacksonAll
       |3rd_party-java-mvn-org-eclipse-jetty-JettyAll
       |3rd_party-java-mvn-org-json4s-Json4sAll
+      |3rd_party-java-mvn-org-scalamock-ScalaMockAll
       |3rd_party-java-mvn-redis-clients-JedisAll
       |common-rpcutils-DuplexProtocolJavaProto
       |common-rpcutils-EmptyJavaProto
@@ -74,6 +76,7 @@ class SmallProjectFilter(modulePaths: Map[Int, String]) {
       path.startsWith("modeling-common") ||
       path.startsWith("modeling-dependency") ||
       path.startsWith("modeling-hiveaccess") ||
+      path.startsWith("modeling-perseus-schema") ||
       path.startsWith("modeling-utils") ||
 
       path == "grid-scrubplus-logformat-generated-hive_proto-EvfColumnsProto" ||
@@ -105,7 +108,9 @@ object SimpleGradleConvert extends Logger {
     val dependencies =
       com.rocketfuel.build.db.mvn.Dependency.list.vector().groupBy(_.sourceId)
     val publications = {
-      for (i <- Publications.all.iterator()) yield {
+      for (i <- Publications.all.iterator()
+        if (i.groupId != "com.rocketfuel.common.message.protobuf.epiphany")
+      ) yield {
         i.id -> i
       }
     }.toMap

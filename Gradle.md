@@ -51,3 +51,11 @@
   * Python libs, binaries, tests
   * verify IDE integration
   * explore composite builds (it would make it possible to use smaller or bigger set of repos as one Gradle build)
+
+
+### Refresh Vostok repo
+
+```for dname in projects/* ; do if [ -f $dname/build.gradle ] ; then   echo $dname; cp -r $dname ~/git/data/vostok-gradle/projects ; fi; done
+cp settings.gradle ~/git/data/vostok-gradle
+cp -r projects/testdata ~/git/data/vostok-gradle/projects
+```

@@ -88,7 +88,6 @@ class GradleConvert(projectRoot: Path, modulePaths: Map[Int, String],
       |    maven(MavenPublication) {
       |      groupId '__GROUP__'
       |      artifactId '__NAME__'
-      |      version '__VERSION__'
       |
       |      from components.java
       |
@@ -96,6 +95,24 @@ class GradleConvert(projectRoot: Path, modulePaths: Map[Int, String],
       |      // artifact sourcesJar {
       |      //   classifier "sources"
       |      // }
+      |      // replace dependencies within our components with ranges
+      |      pom.withXml {
+      |          asNode().dependencies.'*'.findAll() {
+      |              it.groupId.text() == 'com.rocketfuel.vostok'
+      |          }.each() {
+      |            def firstDot = it.version.text().indexOf('.')
+      |            def lastDot = it.version.text().lastIndexOf('.')
+      |            def dash = it.version.text().indexOf('-')
+      |            def minorVersion = Integer.valueOf(
+      |                it.version.text().substring(firstDot + 1, lastDot))
+      |            def patchVersion = it.version.text().substring(lastDot + 1, dash - 1)
+      |            project.logger.info("will replace ${patchVersion} in ${it}")
+      |            def range = '[' + it.version.text().substring(0, dash) + ',' +
+      |                it.version.text().substring(0, firstDot + 1) + (minorVersion + 1) + '.0)'
+      |            it.version*.value = range
+      |          }
+      |      }
+      |
       |    }
       |  }
       |}
@@ -105,6 +122,7 @@ class GradleConvert(projectRoot: Path, modulePaths: Map[Int, String],
   def publishSnippet(publications: Publications): String =
     publishSnippet.replace("__GROUP__", publications.groupId).
       replace("__NAME__", publications.artifactId).
+      // this won't happen and we expect manually setting initial version `gradle :foo:markNextVersion -Prelease.version=<version>
       replace("__VERSION__", publications.baseVersion)
 
   private val scala210Libs = List(GrDependency(dep = "'org.scala-lang:scala-library:2.10.4'"),
@@ -238,8 +256,7 @@ class GradleConvert(projectRoot: Path, modulePaths: Map[Int, String],
 
         if (buildGradleParts.plugins.contains("plugin: 'java'") || buildGradleParts.plugins.contains("plugin: 'scala'")) {
           buildGradleParts.copy(group = publish.groupId, name = Some(publish.artifactId),
-            // plugins = buildGradleParts.plugins + "from: \"${rootProject.projectDir}/gradle/publish.gradle\"",
-            plugins = buildGradleParts.plugins + "plugin: 'maven-publish'",
+            plugins = buildGradleParts.plugins + "plugin: 'maven-publish'" + "from: \"${rootProject.projectDir}/gradle/release.gradle\"",
             snippets = buildGradleParts.snippets + publishSnippet(publish))
         } else {
           logger.info(s"ignore publish for ${prjBld} - ${buildGradleParts.plugins}")

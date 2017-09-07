@@ -8,15 +8,19 @@ object Projects {
 
   private val bldGroupings = Seq(
     BldGrouping(sharedPrefix = "brand-veenome"),
+
+    // TODO: kill this completely
     BldGrouping(sharedPrefix = "camus-api"),
     BldGrouping(sharedPrefix = "camus-coders"),
     BldGrouping(sharedPrefix = "camus-etl-mapred-support"),
     BldGrouping(sharedPrefix = "camus-etl"),
     BldGrouping(sharedPrefix = "camus-schemaregistry"),
 //    BldGrouping(sharedPrefix = "camus"),
+
     // merge all common protobufs
     // temporarily split aerospike_data_message & page_context
-    BldGrouping(sharedPrefix = "common-message", excludes = Set("common-message-protobuf-AerospikeDataMessageProto")),
+    // BldGrouping(sharedPrefix = "common-message", excludes = Set("common-message-protobuf-AerospikeDataMessageProto")),
+    BldGrouping(sharedPrefix = "common-message"),
     BldGrouping(sharedPrefix = "grid-scrubplus-logformat-generated-hive_proto-EvfColumnsProto",
       gradleProjectName = Some("common-message")),
 
@@ -42,7 +46,8 @@ object Projects {
     BldGrouping(sharedPrefix = "grid-common-mapreduce-job-metrics"),
     BldGrouping(sharedPrefix = "modeling-hiveaccess-OrcStructFieldRetriever", gradleProjectName = Some("grid-common-hive")),
     BldGrouping(sharedPrefix = "modeling-utils-hive-HiveUtils", gradleProjectName = Some("grid-common-hive")),
-    BldGrouping(sharedPrefix = "grid-externalreport"),
+    BldGrouping(sharedPrefix = "dp-externalreport-src-main-java-com-rocketfuel-grid-externalreport",
+      gradleProjectName = Some("grid-externalreport")),
     BldGrouping(sharedPrefix = "grid-keychainsegjournal"),
     BldGrouping(sharedPrefix = "grid-lookup-dim-config"),
     BldGrouping(sharedPrefix = "grid-lookup-dim-ds"),
@@ -90,6 +95,9 @@ object Projects {
 
     BldGrouping(sharedPrefix = "grid-quasar"),
     BldGrouping(sharedPrefix = "grid-reportplus-writers"),
+    BldGrouping(sharedPrefix = "grid-reportplus-common", gradleProjectName = Some("grid-reportplus-shared")),
+    BldGrouping(sharedPrefix = "grid-reportplus-config", gradleProjectName = Some("grid-reportplus-shared")),
+    BldGrouping(sharedPrefix = "grid-reportplus-lookup", gradleProjectName = Some("grid-reportplus-shared")),
     BldGrouping(sharedPrefix = "grid-reportplus"),
     BldGrouping(sharedPrefix = "grid-retention"),
     BldGrouping(sharedPrefix = "grid-site_mv"),
@@ -110,13 +118,13 @@ object Projects {
     BldGrouping(sharedPrefix = "modeling-common-ModelingCommon"),
     BldGrouping(sharedPrefix = "modeling-common"),
     BldGrouping(sharedPrefix = "modeling-behavioral", gradleProjectName = Some("modeling-common")),
-    BldGrouping(sharedPrefix = "modeling-bt"),
+    BldGrouping(sharedPrefix = "modeling-bt", gradleProjectName = Some("modeling-common")),
     BldGrouping(sharedPrefix = "modeling-dependency"),
-    BldGrouping(sharedPrefix = "modeling-utils"), // modeling-utils-hive is moved to grid-common-hive
+    BldGrouping(sharedPrefix = "modeling-perseus-schema"),
+    BldGrouping(sharedPrefix = "modeling-utils", gradleProjectName = Some("modeling-common")), // modeling-utils-hive is moved to grid-common-hive
 
-    // create one project for server.util, the only external dependency is server.geoip.TimeZone
+    // create one project for server.util
     BldGrouping(sharedPrefix = "server-util"),
-    BldGrouping(sharedPrefix = "server-geoip-TimeZone", gradleProjectName = Some("server-util")),
 
     BldGrouping(sharedPrefix = "server-geoip"),
     BldGrouping(sharedPrefix = "server-rfi"),

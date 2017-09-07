@@ -29,13 +29,16 @@ object Clone {
 
     Process("git", Seq("clone", url, absoluteDestination)).!
 
-    Process(Seq("git", "fetch", url, change), destinationFile).!
-
-    Process(Seq("git", "checkout", "FETCH_HEAD"), destinationFile).!
+    Process(Seq("git", "checkout", change), destinationFile).!
+//    Process(Seq("git", "fetch", url, change), destinationFile).!
+//
+//    Process(Seq("git", "checkout", "FETCH_HEAD"), destinationFile).!
   }
 
   def vostok(destinationRoot: Path): Unit = {
-    clone("ssh://git.rfiserve.net:29418/data/vostok", "refs/changes/15/115415/8", destinationRoot)
+    // clone("ssh://git.rfiserve.net:29418/data/vostok", "refs/changes/15/115415/8", destinationRoot)
+    // master as of Sep 6, 2017
+    clone("ssh://git.rfiserve.net:29418/data/vostok", "b3ee4d9b44e0045133a6479b116e6befbb66290d", destinationRoot)
   }
 
 }
