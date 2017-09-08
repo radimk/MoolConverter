@@ -17,9 +17,10 @@ object Projects {
     BldGrouping(sharedPrefix = "camus-schemaregistry"),
 //    BldGrouping(sharedPrefix = "camus"),
 
+    // the only thrift lib, possibly attach it to grid-onlinestore-service
+    BldGrouping(sharedPrefix = "common-message-thrift"),
+
     // merge all common protobufs
-    // temporarily split aerospike_data_message & page_context
-    // BldGrouping(sharedPrefix = "common-message", excludes = Set("common-message-protobuf-AerospikeDataMessageProto")),
     BldGrouping(sharedPrefix = "common-message"),
     BldGrouping(sharedPrefix = "grid-scrubplus-logformat-generated-hive_proto-EvfColumnsProto",
       gradleProjectName = Some("common-message")),
