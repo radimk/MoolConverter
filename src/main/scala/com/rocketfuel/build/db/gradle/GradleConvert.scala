@@ -97,8 +97,10 @@ class GradleConvert(projectRoot: Path, modulePaths: Map[Int, String],
       |      // }
       |      // replace dependencies within our components with ranges
       |      pom.withXml {
+      |          def publishedArtifactGroups = ['com.rocketfuel.vostok',
+      |              'com.rocketfuel.common.message']
       |          asNode().dependencies.'*'.findAll() {
-      |              it.groupId.text() == 'com.rocketfuel.vostok'
+      |              publishedArtifactGroups.contains(it.groupId.text())
       |          }.each() {
       |            def firstDot = it.version.text().indexOf('.')
       |            def lastDot = it.version.text().lastIndexOf('.')
@@ -185,23 +187,27 @@ class GradleConvert(projectRoot: Path, modulePaths: Map[Int, String],
       prjBld.ruleType match {
         case "java_proto_lib" =>
           BuildGradleParts(compileDeps = Set(protoLib) ++ dependencyList(false),
-            plugins = Set("plugin: 'java'", "plugin: 'com.google.protobuf'"),
+            plugins = Set("plugin: 'java'", "plugin: 'com.google.protobuf'",
+              "from: \"${rootProject.projectDir}/gradle/checks.gradle\""),
             snippets = Set(protoConfigSnippet))
         case "java_lib" | "file_coll" =>
           BuildGradleParts(compileDeps = dependencyList(false),
-            plugins = Set("plugin: 'java'"),
+            plugins = Set("plugin: 'java'", "from: \"${rootProject.projectDir}/gradle/checks.gradle\""),
             snippets = Set(sourceCompatibility(prjBld.javaVersion)))
         case "java_bin" =>
           BuildGradleParts(compileDeps = dependencyList(false),
-            plugins = Set("plugin: 'java'", "plugin: 'com.github.johnrengelman.shadow'"),
+            plugins = Set("plugin: 'java'", "plugin: 'com.github.johnrengelman.shadow'",
+              "from: \"${rootProject.projectDir}/gradle/checks.gradle\""),
             snippets = shadowJarConfig(prjBld.mainClass).toSet + sourceCompatibility(prjBld.javaVersion))
         case "java_test" =>
           // 'from: "${' will be interpolated by Gradle
-          BuildGradleParts(plugins = Set("plugin: 'java'", "from: \"${rootProject.projectDir}/gradle/tests.gradle\""),
+          BuildGradleParts(plugins = Set("plugin: 'java'", "from: \"${rootProject.projectDir}/gradle/tests.gradle\"",
+            "from: \"${rootProject.projectDir}/gradle/checks.gradle\""),
             snippets = Set(testNGConfig(prjBld.testGroups)) + sourceCompatibility(prjBld.javaVersion),
             compileDeps = dependencyList(true))
         case "java_thrift_lib" =>
-          BuildGradleParts(plugins = Set("plugin: 'java'", "plugin: 'org.jruyi.thrift'"),
+          BuildGradleParts(plugins = Set("plugin: 'java'", "plugin: 'org.jruyi.thrift'",
+            "from: \"${rootProject.projectDir}/gradle/checks.gradle\""),
             snippets = Set(thriftConfigSnippet) + sourceCompatibility(prjBld.javaVersion),
             compileDeps = Set(thriftLib) ++ dependencyList(false))
         case "scala_lib" =>
@@ -214,7 +220,7 @@ class GradleConvert(projectRoot: Path, modulePaths: Map[Int, String],
               dependencyList(false)
           }
           BuildGradleParts(compileDeps = compileDeps,
-            plugins = Set("plugin: 'scala'"),
+            plugins = Set("plugin: 'scala'", "from: \"${rootProject.projectDir}/gradle/scalachecks.gradle\""),
             snippets = Set(sourceCompatibility(prjBld.javaVersion)),
             scalaVersions = prjBld.scalaVersion.toSet)
         case "scala_test" =>
@@ -227,7 +233,8 @@ class GradleConvert(projectRoot: Path, modulePaths: Map[Int, String],
               dependencyList(true).toSet + scalatestLibs
           }
           BuildGradleParts(compileDeps = compileDeps,
-            plugins = Set("plugin: 'scala'", "plugin: 'com.github.maiflai.scalatest'"),
+            plugins = Set("plugin: 'scala'", "plugin: 'com.github.maiflai.scalatest'",
+              "from: \"${rootProject.projectDir}/gradle/scalachecks.gradle\""),
             snippets = Set(sourceCompatibility(prjBld.javaVersion), scalatestSnippet),
             scalaVersions = prjBld.scalaVersion.toSet)
         case "scala_bin" =>
@@ -240,7 +247,8 @@ class GradleConvert(projectRoot: Path, modulePaths: Map[Int, String],
               dependencyList(false)
           }
           BuildGradleParts(compileDeps = compileDeps,
-            plugins = Set("plugin: 'scala'", "plugin: 'com.github.johnrengelman.shadow'"),
+            plugins = Set("plugin: 'scala'", "plugin: 'com.github.johnrengelman.shadow'",
+              "from: \"${rootProject.projectDir}/gradle/scalachecks.gradle\""),
             snippets = shadowJarConfig(prjBld.mainClass).toSet + sourceCompatibility(prjBld.javaVersion),
             scalaVersions = prjBld.scalaVersion.toSet)
         case _ =>
